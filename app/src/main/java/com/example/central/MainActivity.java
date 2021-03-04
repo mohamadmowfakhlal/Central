@@ -13,8 +13,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
+public class MainActivity extends AppCompatActivity {
+    public List<Device> devices = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,5 +55,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public List<Device> getObjectList(){
+        return devices;
+    }
+
+    public void setObjectList(List<Device> asList) {
+        devices = asList;
     }
 }
