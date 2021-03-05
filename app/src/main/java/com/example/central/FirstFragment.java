@@ -86,14 +86,12 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.count_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //boolean result = signin(view);
-                // Get the value of the text view
                 String user_name = username.getText().toString();
                 String pass_word = password.getText().toString();
                 // Instantiate the RequestQueue.
                 RequestQueue queue =  Volley.newRequestQueue(getActivity().getApplicationContext());
-                String url ="http://ec2-3-120-27-130.eu-central-1.compute.amazonaws.com/users/check/"+ user_name +"?password="+pass_word+ "";
-/*
+/*                String url ="http://ec2-3-120-27-130.eu-central-1.compute.amazonaws.com/users/check/"+ user_name +"?password="+pass_word+ "";
+
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
@@ -117,7 +115,7 @@ public class FirstFragment extends Fragment {
                 });
                     // Add the request to the RequestQueue.
                     //queue.add(stringRequest);*/
-                String url1 ="http://ec2-18-197-171-74.eu-central-1.compute.amazonaws.com/users/checkauthorizatation/"+ user_name +"?password="+pass_word+ "";
+                String url1 ="http://ec2-52-59-193-148.eu-central-1.compute.amazonaws.com/users/checkauthorizatation/"+ user_name +"?password="+pass_word+ "";
                 GsonRequest<Device[]> myReq = new GsonRequest<Device[]>(
                         url1,
                         Device[].class,null,
@@ -132,22 +130,7 @@ public class FirstFragment extends Fragment {
 
     }
 
-   // private boolean signin(View view) {
-
-
-
-
-        //login.setText(user_name + pass_word);
-        // Convert value to a number and increment it
-        //Integer count = Integer.parseInt(countString);
-        //count++;
-        // Display the new value in the text view.
-        //username.setText(count.toString());
-
-        //return result[0];
-  //  }
-
-    public class GsonRequest<T> extends Request<T> {
+   public class GsonRequest<T> extends Request<T> {
         private final Gson gson = new Gson();
         private final Class<T> clazz;
         private final Map<String, String> headers;
@@ -223,7 +206,7 @@ public class FirstFragment extends Fragment {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("Hello");
+                System.out.println("Error ");
 
                 // Do whatever you want to do with error.getMessage();
             }

@@ -9,7 +9,21 @@
 
     <string name="username">user name</string>
     <string name="password">password</string>
-    <string name="random_heading">Here is a random number between 0 and %d.</string>
+    <string name="random_heading">List of Devices that the user has a permission to access</string>
     <string name="toast_button_text">Toast</string>
     <string name="random_button_text">Random</string>
+    <string-array name="array_technology">
+        <item>Android</item>
+        <item>Java</item>
+        <item>Php</item>
+        <item>Hadoop</item>
+        <item>Sap</item>
+        <item>Python</item>
+        <item>Ajax</item>
+        <item>C++</item>
+        <item>Ruby</item>
+        <item>Rails</item>
+        <item>.Net</item>
+        <item>Perl</item>
+    </string-array>
 </resources>
