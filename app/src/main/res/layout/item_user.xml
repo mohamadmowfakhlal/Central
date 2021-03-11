@@ -6,13 +6,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:text="deviceID" />
     <TextView
         android:id="@+id/MAC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:text="MAC" />
+
+    <Button
+        android:id="@+id/btButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="@string/connect" />
 </LinearLayout>

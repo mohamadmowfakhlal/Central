@@ -12,6 +12,7 @@
     <string name="random_heading">List of Devices that the user has a permission to access</string>
     <string name="toast_button_text">Toast</string>
     <string name="random_button_text">Random</string>
+    <string name="connect">connect</string>
     <string-array name="array_technology">
         <item>Android</item>
         <item>Java</item>

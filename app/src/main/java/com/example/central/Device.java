@@ -1,5 +1,8 @@
 package com.example.central;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 public class Device {
@@ -20,5 +23,14 @@ public class Device {
     @Override
     public String toString() {
         return "Device [DeviceID=" + deviceID + ", MAC=" + MAC + "]";
+    }
+
+    public JSONObject toJSON() throws JSONException {
+
+        JSONObject jo = new JSONObject();
+        jo.put("integer", deviceID);
+        jo.put("string", MAC);
+
+        return jo;
     }
 }

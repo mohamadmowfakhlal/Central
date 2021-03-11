@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //import androidx.navigation.fragment.navArgs;
 
@@ -15,9 +18,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class SecondFragment extends Fragment {
     ListView listView;
@@ -60,7 +72,7 @@ public class SecondFragment extends Fragment {
 
         //Integer count = SecondFragmentArgs.fromBu ndle(getArguments()).getMyArg();
         //String countText = getString(R.string.random_heading, count);
-        TextView headerView = view.getRootView().findViewById(R.id.textview_header);
+        //TextView headerView = view.getRootView().findViewById(R.id.textview_header);
        // headerView.setText(countText);
         //Random random = new java.util.Random();
         //Integer randomNumber = 0;
@@ -80,15 +92,14 @@ public class SecondFragment extends Fragment {
         });
 
     // Create the adapter to convert the array to views
-        UsersAdapter adapter = new UsersAdapter(getActivity(), DeviceList);
+        DevicesAdpater adapter = new DevicesAdpater(getActivity(), DeviceList);
     // Attach the adapter to a ListView
         ListView listView =  view.getRootView().findViewById(R.id.list_view);
         listView.setAdapter(adapter);
-
     }
 
-    public class UsersAdapter extends ArrayAdapter<Device> {
-        public UsersAdapter(Context context, List<Device> users) {
+    public class DevicesAdpater extends ArrayAdapter<Device> {
+        public DevicesAdpater(Context context, List<Device> users) {
             super(context, 0, users);
         }
 
@@ -101,13 +112,102 @@ public class SecondFragment extends Fragment {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_user, parent, false);
             }
             // Lookup view for data population
-            TextView tvName = (TextView) convertView.findViewById(R.id.deviceID);
-            TextView tvHome = (TextView) convertView.findViewById(R.id.MAC);
+            TextView deviceID = (TextView) convertView.findViewById(R.id.deviceID);
+            TextView MAC = (TextView) convertView.findViewById(R.id.MAC);
             // Populate the data into the template view using the data object
-            tvName.setText(device.deviceID);
-            tvHome.setText(device.MAC);
+            deviceID.setText(device.deviceID);
+            MAC.setText(device.MAC);
             // Return the completed view to render on screen
+            Button btButton = (Button) convertView.findViewById(R.id.btButton);
+            // Cache row position inside the button using `setTag`
+            btButton.setTag(position);
+            // Attach the click event handler
+            btButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = (Integer) view.getTag();
+                    // Access the row position here to get the correct data item
+                    Device device = getItem(position);
+
+
+                    byte[] Cnonce = new byte[16];
+                    new SecureRandom().nextBytes(Cnonce);
+                    String HexCnonce = convertBytesToHex(Cnonce);
+                    
+                    Nonces nonce = new Nonces();
+                    nonce.setCNonce("4c6bYGRIWzZOsxVQtL7YxQ==");
+                    nonce.setSNonce("SkWRnLgmdqC9HwtFzWGuJA==");
+                    nonce.setMAC(device.MAC);
+                    // Do what you want here...
+                    // Instantiate the RequestQueue.
+                    RequestQueue queue =  Volley.newRequestQueue(getActivity().getApplicationContext());
+/*                String url ="ec2-35-158-119-174.eu-central-1.compute.amazonaws.com/check/"+ user_name +"?password="+pass_word+ "";
+
+                   // Add the request to the RequestQueue.
+                    //queue.add(stringRequest);*/
+                    String url ="http://ec2-3-122-232-23.eu-central-1.compute.amazonaws.com/token/";
+                    GsonRequest<Nonces> myReq = null;
+                    try {
+                        myReq = new GsonRequest<Nonces>( Request.Method.POST,nonce.toJSON(),
+                                url,
+                                Nonces.class,null,
+                                createMyReqSuccessListener(),
+                                createMyReqErrorListener());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    queue.add(myReq);
+                }
+            });
+
             return convertView;
         }
+
+    }
+
+    private Response.Listener<Nonces> createMyReqSuccessListener() {
+
+        return new Response.Listener<Nonces>() {
+            @Override
+            public void onResponse(Nonces response) {
+                System.out.println("Hello world" +response.getCNonce() + response.getSNonce());
+                //compare Cnonce with local Cnonce
+                //send Snonce to peripheral device in plaintext write characteristic
+                //List<Nonces> nonces = new ArrayList<>();
+                //nonces = Arrays.asList(response);
+                //boolean x = nonces.isEmpty();
+                //if(!x){
+                 //   int currentCount = Integer.parseInt(nonces.get(0).MAC);
+
+                    //NavHostFragment.findNavController(FirstFragment.this).navigate( FirstFragmentDirections.actionFirstFragmentToSecondFragment());
+                //}else{
+                    //myToast = Toast.makeText(getActivity(), "failed to login !", Toast.LENGTH_SHORT);
+                    //myToast.show();
+                //}
+                // Do whatever you want to do with response;
+                // Like response.tags.getListing_count(); etc. etc.
+            //}
+            }
+        };
+    }
+
+    private Response.ErrorListener createMyReqErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("Error ");
+
+                // Do whatever you want to do with error.getMessage();
+            }
+        };
+    }
+    // util to print bytes in hex
+    private static String convertBytesToHex(byte[] bytes) {
+        StringBuilder result = new StringBuilder();
+        for (byte temp : bytes) {
+            result.append(String.format("%02x", temp));
+        }
+        return result.toString();
     }
 }

@@ -48,7 +48,6 @@ public class FirstFragment extends Fragment {
     EditText password;
     Toast myToast;
 
-    //TextView login;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -90,7 +89,7 @@ public class FirstFragment extends Fragment {
                 String pass_word = password.getText().toString();
                 // Instantiate the RequestQueue.
                 RequestQueue queue =  Volley.newRequestQueue(getActivity().getApplicationContext());
-/*                String url ="http://ec2-3-120-27-130.eu-central-1.compute.amazonaws.com/users/check/"+ user_name +"?password="+pass_word+ "";
+/*                String url ="ec2-35-158-119-174.eu-central-1.compute.amazonaws.com/check/"+ user_name +"?password="+pass_word+ "";
 
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -115,69 +114,20 @@ public class FirstFragment extends Fragment {
                 });
                     // Add the request to the RequestQueue.
                     //queue.add(stringRequest);*/
-                String url1 ="http://ec2-52-59-193-148.eu-central-1.compute.amazonaws.com/users/checkauthorizatation/"+ user_name +"?password="+pass_word+ "";
-                GsonRequest<Device[]> myReq = new GsonRequest<Device[]>(
+                String url1 ="http://ec2-3-122-232-23.eu-central-1.compute.amazonaws.com/checkauthorizatation/"+ user_name +"?password="+pass_word+ "";
+                GsonRequest<Device[]> myReq = new GsonRequest<Device[]>(Request.Method.GET,null,
                         url1,
                         Device[].class,null,
                         createMyReqSuccessListener(),
                         createMyReqErrorListener());
                 queue.add(myReq);
-
-
                 //VolleyQueue.get().add(getPersons);
             }
         });
 
     }
 
-   public class GsonRequest<T> extends Request<T> {
-        private final Gson gson = new Gson();
-        private final Class<T> clazz;
-        private final Map<String, String> headers;
-        private final Response.Listener<T> listener;
 
-        /**
-         * Make a GET request and return a parsed object from JSON.
-         *
-         * @param url URL of the request to make
-         * @param clazz Relevant class object, for Gson's reflection
-         * @param headers Map of request headers
-         */
-        public GsonRequest(String url, Class<T> clazz, Map<String, String> headers,
-                           Response.Listener<T> listener, Response.ErrorListener errorListener) {
-            super(Method.GET, url, errorListener);
-            this.clazz = clazz;
-            this.headers = headers;
-            this.listener = listener;
-        }
-
-        @Override
-        public Map<String, String> getHeaders() throws AuthFailureError {
-            return headers != null ? headers : super.getHeaders();
-        }
-
-        @Override
-        protected void deliverResponse(T response) {
-            listener.onResponse(response);
-        }
-
-        @Override
-        protected Response<T> parseNetworkResponse(NetworkResponse response) {
-            try {
-                String json = new String(
-                        response.data,
-                        HttpHeaderParser.parseCharset(response.headers));
-
-                return Response.success(
-                        gson.fromJson(json, clazz),
-                        HttpHeaderParser.parseCacheHeaders(response));
-            } catch (UnsupportedEncodingException e) {
-                return Response.error(new ParseError(e));
-            } catch (JsonSyntaxException e) {
-                return Response.error(new ParseError(e));
-            }
-        }
-    }
 
 
     private Response.Listener<Device[]> createMyReqSuccessListener() {
